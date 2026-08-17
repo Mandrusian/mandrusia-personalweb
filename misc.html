@@ -3,314 +3,547 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mandrusia Quiz Engine</title>
+    <title>Mandrusia Tech - Quiz Creator & Taker</title>
     <style>
         :root {
-            --bg-primary: #121214;
-            --bg-surface: #1e1e24;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --border: #374151;
-            --success: #10b981;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #22c55e;
+            --error: #ef4444;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
         }
 
         .container {
-            width: 100%;
-            max-width: 750px;
-            background: var(--bg-surface);
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        h1, h2 {
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .tabs {
+        header {
             display: flex;
-            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 2rem;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
         }
 
-        .tab-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            font-weight: 500;
-            cursor: pointer;
+        h1 {
+            font-size: 1.5rem;
+            color: var(--text);
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        button {
+            background-color: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
             padding: 0.5rem 1rem;
-            transition: all 0.2s ease;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
-        .tab-btn.active {
-            color: var(--accent);
-            border-bottom: 3px solid var(--accent);
-            margin-bottom: -10px;
+        button:hover {
+            background-color: var(--border);
         }
 
-        .view-panel {
-            display: none;
+        button.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
         }
 
-        .view-panel.active {
-            display: block;
+        button.primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
         }
 
-        .input-group {
-            margin-bottom: 1.25rem;
+        button.primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Creator Styles */
+        .form-group {
+            margin-bottom: 1rem;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             color: var(--text-muted);
+            margin-bottom: 0.375rem;
         }
 
         input[type="text"], textarea {
             width: 100%;
-            padding: 0.75rem;
-            background: var(--bg-primary);
+            background-color: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text-main);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            color: var(--text);
             font-size: 1rem;
-            outline: none;
         }
 
-        input:focus, textarea:focus {
-            border-color: var(--accent);
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         .option-row {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 0.75rem;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
         .option-row input[type="radio"] {
-            transform: scale(1.2);
-            accent-color: var(--accent);
-            cursor: pointer;
+            accent-color: var(--primary);
+            width: 1.2rem;
+            height: 1.2rem;
         }
 
-        button.btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-            margin-top: 1rem;
-        }
-
-        button.btn:hover {
-            background: var(--accent-hover);
-        }
-
-        .btn-secondary {
-            background: transparent;
+        .quiz-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
             border: 1px solid var(--border);
-            color: var(--text-main);
-            margin-bottom: 1.5rem;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.05);
-        }
-
-        .question-builder-block {
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            background: rgba(0,0,0,0.15);
+            border-radius: 0.375rem;
+            margin-bottom: 0.75rem;
+            background-color: var(--bg);
         }
 
         /* Taker Styles */
-        .quiz-question-card {
-            margin-bottom: 2rem;
+        .question-block {
+            margin-bottom: 1.5rem;
             padding-bottom: 1.5rem;
             border-bottom: 1px solid var(--border);
         }
 
-        .quiz-options-list {
-            list-style: none;
-            margin-top: 1rem;
+        .question-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
 
-        .quiz-option-item {
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .option-label {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             padding: 0.75rem;
-            background: var(--bg-primary);
+            background-color: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
             cursor: pointer;
+            transition: border-color 0.2s;
         }
 
-        .quiz-option-item:hover {
-            border-color: var(--text-muted);
+        .option-label:hover {
+            border-color: var(--primary);
         }
 
-        /* Results Screen */
+        .option-label input {
+            accent-color: var(--primary);
+        }
+
         .results-box {
-            display: none;
-            margin-top: 2rem;
+            background-color: var(--bg);
+            border: 2px solid var(--primary);
+            border-radius: 0.5rem;
             padding: 1.5rem;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--success);
-            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1.5rem;
         }
 
-        .feedback-correct {
-            color: var(--success);
+        .results-score {
+            font-size: 2.5rem;
             font-weight: bold;
-            margin-top: 0.5rem;
+            color: var(--primary);
+            margin: 0.5rem 0;
         }
 
-        .feedback-explanation {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
-            font-style: italic;
+        .review-item {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .review-item.correct {
+            border-color: var(--success);
+        }
+
+        .review-item.incorrect {
+            border-color: var(--error);
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('creator')">Quiz Creator</button>
-        <button class="tab-btn" onclick="switchTab('taker')">Quiz Taker</button>
-    </div>
+    <header>
+        <h1>mandrusia<span>.tech</span> Quiz Engine</h1>
+        <div class="nav-btns">
+            <button id="nav-taker" class="active" onclick="switchTab('taker')">Take Quiz</button>
+            <button id="nav-creator" onclick="switchTab('creator')">Quiz Creator</button>
+        </div>
+    </header>
 
-    <!-- CREATOR VIEW -->
-    <div id="creator-view" class="view-panel active">
-        <h2>Build Your Custom ABCD Quiz</h2>
-        <div class="input-group">
-            <label for="quiz-title">Quiz Title</label>
-            <input type="text" id="quiz-title" placeholder="e.g., Creative History Quiz">
+    <!-- TAKER SECTION -->
+    <section id="section-taker">
+        <div id="quiz-select-card" class="card">
+            <h2 style="margin-bottom: 1rem;">Select a Quiz</h2>
+            <div id="available-quizzes">
+                <p style="color: var(--text-muted);">No quizzes available. Create one using the Quiz Creator!</p>
+            </div>
         </div>
 
-        <div id="questions-container">
-            <!-- Dynamic Question Blocks Inject Here -->
+        <div id="quiz-taking-card" class="card hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 id="active-quiz-title">Quiz Title</h2>
+                <button onclick="exitQuiz()">Back to List</button>
+            </div>
+            <form id="quiz-form" onsubmit="submitQuiz(event)">
+                <div id="questions-container"></div>
+                <div style="margin-top: 2rem;">
+                    <button type="submit" class="primary" style="width: 100%; padding: 0.875rem; font-size: 1rem;">Submit Answers</button>
+                </div>
+            </form>
         </div>
 
-        <button type="button" class="btn btn-secondary" onclick="addQuestionBlock()">+ Add Question</button>
-        <button type="button" class="btn" onclick="saveQuiz()">Save & Publish Quiz</button>
-    </div>
-
-    <!-- TAKER VIEW -->
-    <div id="taker-view" class="view-panel">
-        <h2 id="display-quiz-title">No quiz loaded. Go to Creator to build one!</h2>
-        <form id="quiz-execution-form" onsubmit="evaluateQuiz(event)">
-            <div id="quiz-render-area"></div>
-            <button type="submit" id="submit-quiz-btn" class="btn" style="display:none;">Submit Answers</button>
-        </form>
-
-        <!-- HIDDEN UNTIL COMPLETION -->
-        <div id="results-screen" class="results-box">
-            <h3>Quiz Completed!</h3>
-            <p id="score-summary" style="font-size: 1.2rem; margin: 0.5rem 0 1.5rem 0;"></p>
-            <div id="detailed-answers-key"></div>
+        <div id="quiz-results-card" class="card hidden">
+            <h2>Quiz Results</h2>
+            <div class="results-box">
+                <p>Your Final Score</p>
+                <div class="results-score" id="score-display">0 / 0</div>
+                <p id="score-percentage" style="color: var(--text-muted);">0%</p>
+            </div>
+            <div id="review-container"></div>
+            <button onclick="exitQuiz()" class="primary" style="width: 100%; margin-top: 1.5rem;">Back to Quizzes</button>
         </div>
-    </div>
+    </section>
+
+    <!-- CREATOR SECTION -->
+    <section id="section-creator" class="hidden">
+        <div class="card">
+            <h2 id="builder-heading" style="margin-bottom: 1.5rem;">Create New Quiz</h2>
+            <form id="creator-form" onsubmit="saveQuiz(event)">
+                <div class="form-group">
+                    <label>Quiz Title</label>
+                    <input type="text" id="quiz-title" required placeholder="e.g., JavaScript Fundamentals">
+                </div>
+                
+                <div id="builder-questions-container"></div>
+
+                <button type="button" onclick="addQuestionField()" style="width: 100%; margin-bottom: 1.5rem; border-style: dashed;">+ Add Question</button>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="primary" style="flex: 1;">Save Quiz to Browser</button>
+                    <button type="button" onclick="resetCreatorForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Manage Existing Quizzes</h2>
+            <div id="manage-quizzes-list" style="margin-top: 1rem;">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </section>
 </div>
 
 <script>
-    let questionCounter = 0;
-    let currentQuizData = null;
+    let quizzes = JSON.parse(localStorage.getItem('mandrusia_quizzes')) || [];
+    let currentQuiz = null;
+    let currentQuestionsCount = 0;
 
-    // Standard bootstrap on load: add one empty question block
-    document.addEventListener("DOMContentLoaded", () => {
-        addQuestionBlock();
-        loadSavedQuizFromStorage();
-    });
+    // Initialize sample quiz if localstorage is completely empty
+    if (quizzes.length === 0) {
+        quizzes.push({
+            id: 'sample-1',
+            title: 'Mandrusia Tech Sample Quiz',
+            questions: [
+                {
+                    text: 'Which file format suffix represents standard web pages?',
+                    options: ['.html', '.exe', '.png', '.mp4'],
+                    correct: 0
+                },
+                {
+                    text: 'Where are quizzes stored using this application?',
+                    options: ['Remote Server', 'Web Browser LocalStorage', 'Text file on Desktop', 'Cloud Database'],
+                    correct: 1
+                }
+            ]
+        });
+        localStorage.setItem('mandrusia_quizzes', JSON.stringify(quizzes));
+    }
 
-    function switchTab(target) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+    function switchTab(tab) {
+        document.getElementById('section-taker').classList.toggle('hidden', tab !== 'taker');
+        document.getElementById('section-creator').classList.toggle('hidden', tab !== 'creator');
+        document.getElementById('nav-taker').classList.toggle('active', tab === 'taker');
+        document.getElementById('nav-creator').classList.toggle('active', tab === 'creator');
         
-        if(target === 'creator') {
-            document.querySelectorAll('.tab-btn')[0].classList.add('active');
-            document.getElementById('creator-view').classList.add('active');
+        if (tab === 'taker') {
+            renderQuizList();
+            exitQuiz();
         } else {
-            document.querySelectorAll('.tab-btn')[1].classList.add('active');
-            document.getElementById('taker-view').classList.add('active');
-            renderQuizForTaking();
+            renderManageList();
+            if (currentQuestionsCount === 0) resetCreatorForm();
         }
     }
 
-    function addQuestionBlock() {
-        questionCounter++;
-        const container = document.getElementById('questions-container');
-        const block = document.createElement('div');
-        block.className = 'question-builder-block';
-        block.id = `q-block-${questionCounter}`;
-        
-        block.innerHTML = `
-            <div class="input-group">
-                <label>Question ${questionCounter}</label>
-                <input type="text" class="q-text" placeholder="Type your question prompt here..." required>
+    // --- TAKER LOGIC ---
+    function renderQuizList() {
+        const container = document.getElementById('available-quizzes');
+        if (quizzes.length === 0) {
+            container.innerHTML = `<p style="color: var(--text-muted);">No quizzes available. Create one using the Quiz Creator!</p>`;
+            return;
+        }
+
+        container.innerHTML = quizzes.map(q => `
+            <div class="quiz-list-item">
+                <div>
+                    <strong>${escapeHTML(q.title)}</strong>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);">${q.questions.length} questions</p>
+                </div>
+                <button class="primary" onclick="startQuiz('${q.id}')">Take Quiz</button>
             </div>
-            <div class="input-group">
-                <label>ABCD Options (Select the radio button next to the CORRECT answer)</label>
-                <div class="option-row">
-                    <input type="radio" name="correct-ans-${questionCounter}" value="0" checked>
-                    <input type="text" class="q-opt" placeholder="Option A" required>
-                </div>
-                <div class="option-row">
-                    <input type="radio" name="correct-ans-${questionCounter}" value="1">
-                    <input type="text" class="q-opt" placeholder="Option B" required>
-                </div>
-                <div class="option-row">
-                    <input type="radio" name="correct-ans-${questionCounter}" value="2">
-                    <input type="text" class="q-opt" placeholder="Option C" required>
-                </div>
-                <div class="option-row">
-                    <input type="radio" name="correct-ans-${questionCounter}" value="3">
-                    <input type="text" class="q-opt" placeholder="Option D" required>
-                </div>
-            </div>
-            <div class="input-group">
-                <label>Explanation / Context (Shown *after* quiz submission)</label>
-                <textarea class="q-explain" rows="2" placeholder="Explain why the answer is correct..."></textarea>
-            </div>
-        `;
-        container.appendChild(block);
+        `).join('');
     }
 
-    function saveQuiz() {
-        const title = document.getElementById('quiz-title').value.trim() || "Untitled Quiz";
-        const blocks = document.querySelectorAll('.question-builder-block');
+    function startQuiz(id) {
+        currentQuiz = quizzes.find(q => q.id === id);
+        if (!currentQuiz) return;
+
+        document.getElementById('quiz-select-card').classList.add('hidden');
+        document.getElementById('quiz-taking-card').classList.remove('hidden');
+        document.getElementById('active-quiz-title').textContent = currentQuiz.title;
+
+        const container = document.getElementById('questions-container');
+        container.innerHTML = currentQuiz.questions.map((q, qIndex) => `
+            <div class="question-block">
+                <div class="question-title">Q${qIndex + 1}. ${escapeHTML(q.text)}</div>
+                <div class="options-list">
+                    ${q.options.map((opt, oIndex) => `
+                        <label class="option-label">
+                            <input type="radio" name="question-${qIndex}" value="${oIndex}" required>
+                            <span><strong>${String.fromCharCode(65 + oIndex)}.</strong> ${escapeHTML(opt)}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function exitQuiz() {
+        currentQuiz = null;
+        document.getElementById('quiz-taking-card').classList.add('hidden');
+        document.getElementById('quiz-results-card').classList.add('hidden');
+        document.getElementById('quiz-select-card').classList.remove('hidden');
+        document.getElementById('quiz-form').reset();
+        renderQuizList();
+    }
+
+    function submitQuiz(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        let score = 0;
+        let reviewHTML = '';
+
+        currentQuiz.questions.forEach((q, qIndex) => {
+            const selected = parseInt(formData.get(`question-${qIndex}`));
+            const isCorrect = selected === q.correct;
+            if (isCorrect) score++;
+
+            reviewHTML += `
+                <div class="review-item ${isCorrect ? 'correct' : 'incorrect'}">
+                    <p><strong>Q${qIndex + 1}:</strong> ${escapeHTML(q.text)}</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.875rem;">
+                        Your answer: <span style="color: ${isCorrect ? 'var(--success)' : 'var(--error)'}">${String.fromCharCode(65 + selected)}. ${escapeHTML(q.options[selected])}</span>
+                    </p>
+                    ${!isCorrect ? `<p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--success);">Correct answer: ${String.fromCharCode(65 + q.correct)}. ${escapeHTML(q.options[q.correct])}</p>` : ''}
+                </div>
+            `;
+        });
+
+        const percentage = Math.round((score / currentQuiz.questions.length) * 100);
+        document.getElementById('score-display').textContent = `${score} / ${currentQuiz.questions.length}`;
+        document.getElementById('score-percentage').textContent = `${percentage}% Accuracy`;
+        document.getElementById('review-container').innerHTML = `<h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Detailed Review</h3>` + reviewHTML;
+
+        document.getElementById('quiz-taking-card').classList.add('hidden');
+        document.getElementById('quiz-results-card').classList.remove('hidden');
+    }
+
+    // --- CREATOR LOGIC ---
+    function resetCreatorForm() {
+        document.getElementById('creator-form').reset();
+        document.getElementById('builder-questions-container').innerHTML = '';
+        currentQuestionsCount = 0;
+        addQuestionField();
+        addQuestionField();
+    }
+
+    function addQuestionField(qData = null) {
+        const index = currentQuestionsCount++;
+        const container = document.getElementById('builder-questions-container');
+        
+        const qDiv = document.createElement('div');
+        qDiv.className = 'card';
+        qDiv.style.backgroundColor = 'var(--bg)';
+        qDiv.id = `builder-q-${index}`;
+        
+        qDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <strong>Question ${index + 1}</strong>
+                ${index > 0 ? `<button type="button" onclick="removeQuestionField(${index})" style="background:transparent; border:none; color:var(--error); cursor:pointer;">Remove</button>` : ''}
+            </div>
+            <div class="form-group">
+                <input type="text" class="q-text" placeholder="Enter question text..." value="${qData ? escapeHTML(qData.text) : ''}" required>
+            </div>
+            <label>Options (Select the correct ABCD radio button):</label>
+            ${[0, 1, 2, 3].map(i => `
+                <div class="option-row">
+                    <input type="radio" name="correct-${index}" value="${i}" ${qData && qData.correct === i ? 'checked' : (i === 0 && !qData ? 'checked' : '')} required>
+                    <span style="font-weight: bold; width: 20px;">${String.fromCharCode(65 + i)}.</span>
+                    <input type="text" class="q-option" placeholder="Option ${String.fromCharCode(65 + i)}" value="${qData ? escapeHTML(qData.options[i]) : ''}" required>
+                </div>
+            `).join('')}
+        `;
+        container.appendChild(qDiv);
+    }
+
+    function removeQuestionField(index) {
+        const el = document.getElementById(`builder-q-${index}`);
+        if (el) el.remove();
+    }
+
+    function saveQuiz(event) {
+        event.preventDefault();
+        const title = document.getElementById('quiz-title').value;
+        const questionBlocks = document.querySelectorAll('#builder-questions-container > div');
+        
+        const questions = [];
+        let isValid = true;
+
+        questionBlocks.forEach((block, idx) => {
+            const text = block.querySelector('.q-text').value;
+            const optionInputs = block.querySelectorAll('.q-option');
+            const radios = block.querySelectorAll(`input[type="radio"]`);
+            
+            let correctIndex = 0;
+            radios.forEach((r, rIdx) => {
+                if (r.checked) correctIndex = rIdx;
+            });
+
+            const options = Array.from(optionInputs).map(input => input.value);
+            questions.push({ text, options, correct: correctIndex });
+        });
+
+        const newQuiz = {
+            id: 'quiz-' + Date.now(),
+            title,
+            questions
+        };
+
+        quizzes.push(newQuiz);
+        localStorage.setItem('mandrusia_quizzes', JSON.stringify(quizzes));
+        
+        alert('Quiz successfully saved locally!');
+        resetCreatorForm();
+        renderManageList();
+    }
+
+    function renderManageList() {
+        const container = document.getElementById('manage-quizzes-list');
+        if (quizzes.length === 0) {
+            container.innerHTML = `<p style="color: var(--text-muted);">No custom quizzes created yet.</p>`;
+            return;
+        }
+
+        container.innerHTML = quizzes.map(q => `
+            <div class="quiz-list-item">
+                <div>
+                    <strong>${escapeHTML(q.title)}</strong>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);">${q.questions.length} questions</p>
+                </div>
+                <button onclick="deleteQuiz('${q.id}')" style="color: var(--error); border-color: var(--error);">Delete</button>
+            </div>
+        `).join('');
+    }
+
+    function deleteQuiz(id) {
+        if (confirm('Are you sure you want to delete this quiz?')) {
+            quizzes = quizzes.filter(q => q.id !== id);
+            localStorage.setItem('mandrusia_quizzes', JSON.stringify(quizzes));
+            renderManageList();
+            renderQuizList();
+        }
+    }
+
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+        );
+    }
+
+    // Initial population for creator setup
+    resetCreatorForm();
+</script>
+
+</body>
+</html>
