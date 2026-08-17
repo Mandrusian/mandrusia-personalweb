@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandrusia Quiz Engine</title>
+    <style>
+        :root {
+            --bg-primary: #121214;
+            --bg-surface: #1e1e24;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--bg-surface);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+        }
+
+        h1, h2 {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            margin-bottom: -10px;
+        }
+
+        .view-panel {
+            display: none;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .option-row input[type="radio"] {
+            transform: scale(1.2);
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        button.btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        button.btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .question-builder-block {
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            background: rgba(0,0,0,0.15);
+        }
+
+        /* Taker Styles */
+        .quiz-question-card {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .quiz-options-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .quiz-option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .quiz-option-item:hover {
+            border-color: var(--text-muted);
+        }
+
+        /* Results Screen */
+        .results-box {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 8px;
+        }
+
+        .feedback-correct {
+            color: var(--success);
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .feedback-explanation {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('creator')">Quiz Creator</button>
+        <button class="tab-btn" onclick="switchTab('taker')">Quiz Taker</button>
+    </div>
+
+    <!-- CREATOR VIEW -->
+    <div id="creator-view" class="view-panel active">
+        <h2>Build Your Custom ABCD Quiz</h2>
+        <div class="input-group">
+            <label for="quiz-title">Quiz Title</label>
+            <input type="text" id="quiz-title" placeholder="e.g., Creative History Quiz">
+        </div>
+
+        <div id="questions-container">
+            <!-- Dynamic Question Blocks Inject Here -->
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="addQuestionBlock()">+ Add Question</button>
+        <button type="button" class="btn" onclick="saveQuiz()">Save & Publish Quiz</button>
+    </div>
+
+    <!-- TAKER VIEW -->
+    <div id="taker-view" class="view-panel">
+        <h2 id="display-quiz-title">No quiz loaded. Go to Creator to build one!</h2>
+        <form id="quiz-execution-form" onsubmit="evaluateQuiz(event)">
+            <div id="quiz-render-area"></div>
+            <button type="submit" id="submit-quiz-btn" class="btn" style="display:none;">Submit Answers</button>
+        </form>
+
+        <!-- HIDDEN UNTIL COMPLETION -->
+        <div id="results-screen" class="results-box">
+            <h3>Quiz Completed!</h3>
+            <p id="score-summary" style="font-size: 1.2rem; margin: 0.5rem 0 1.5rem 0;"></p>
+            <div id="detailed-answers-key"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let questionCounter = 0;
+    let currentQuizData = null;
+
+    // Standard bootstrap on load: add one empty question block
+    document.addEventListener("DOMContentLoaded", () => {
+        addQuestionBlock();
+        loadSavedQuizFromStorage();
+    });
+
+    function switchTab(target) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+        
+        if(target === 'creator') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('creator-view').classList.add('active');
+        } else {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('taker-view').classList.add('active');
+            renderQuizForTaking();
+        }
+    }
+
+    function addQuestionBlock() {
+        questionCounter++;
+        const container = document.getElementById('questions-container');
+        const block = document.createElement('div');
+        block.className = 'question-builder-block';
+        block.id = `q-block-${questionCounter}`;
+        
+        block.innerHTML = `
+            <div class="input-group">
+                <label>Question ${questionCounter}</label>
+                <input type="text" class="q-text" placeholder="Type your question prompt here..." required>
+            </div>
+            <div class="input-group">
+                <label>ABCD Options (Select the radio button next to the CORRECT answer)</label>
+                <div class="option-row">
+                    <input type="radio" name="correct-ans-${questionCounter}" value="0" checked>
+                    <input type="text" class="q-opt" placeholder="Option A" required>
+                </div>
+                <div class="option-row">
+                    <input type="radio" name="correct-ans-${questionCounter}" value="1">
+                    <input type="text" class="q-opt" placeholder="Option B" required>
+                </div>
+                <div class="option-row">
+                    <input type="radio" name="correct-ans-${questionCounter}" value="2">
+                    <input type="text" class="q-opt" placeholder="Option C" required>
+                </div>
+                <div class="option-row">
+                    <input type="radio" name="correct-ans-${questionCounter}" value="3">
+                    <input type="text" class="q-opt" placeholder="Option D" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Explanation / Context (Shown *after* quiz submission)</label>
+                <textarea class="q-explain" rows="2" placeholder="Explain why the answer is correct..."></textarea>
+            </div>
+        `;
+        container.appendChild(block);
+    }
+
+    function saveQuiz() {
+        const title = document.getElementById('quiz-title').value.trim() || "Untitled Quiz";
+        const blocks = document.querySelectorAll('.question-builder-block');
