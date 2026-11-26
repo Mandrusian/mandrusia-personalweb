@@ -3,83 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quick step-by-step guide to installing Fedora Workstation Linux on a PC using Fedora Media Writer.">
     <title>How to Install Fedora Linux on a PC</title>
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 1rem;
             line-height: 1.6;
             color: #333;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 1.25rem;
             background-color: #f9f9f9;
+            overflow-wrap: break-word;
         }
         h1 {
             color: #0b2c56;
             border-bottom: 2px solid #3c6eb4;
-            padding-bottom: 10px;
+            padding-bottom: 0.625rem;
+            line-height: 1.25;
+            text-wrap: balance;
         }
         h2 {
             color: #294172;
-            margin-top: 30px;
+            margin-top: 0;
+            line-height: 1.3;
+        }
+        .steps {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
         .step {
             background: #ffffff;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid #3c6eb4;
             border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-left: 4px solid #3c6eb4;
+        }
+        .step p:last-child {
+            margin-bottom: 0;
         }
         .warning {
             background: #fff3cd;
+            border: 1px solid #ffe69c;
             border-left: 4px solid #ffc107;
-            padding: 15px;
+            padding: 0.9375rem;
             border-radius: 4px;
-            margin: 20px 0;
+            margin: 1.25rem 0;
         }
         code {
             background: #eee;
-            padding: 2px 6px;
+            padding: 0.125rem 0.375rem;
             border-radius: 4px;
-            font-family: monospace;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            .step {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
     <img src="https://urlto.me/1gdZ.gif" alt="" style="display:none; width:1px; height:1px; visibility:hidden;" />
 
-    <h1>Installing Fedora Workstation: Quick Guide</h1>
-    <p>This guide provides a straightforward summary of the official Fedora documentation to get Fedora Workstation running on your computer.</p>
+    <main>
+        <h1>Installing Fedora Workstation: Quick Guide</h1>
+        <p>This guide provides a straightforward summary of the official Fedora documentation to get Fedora Workstation running on your computer.</p>
 
-    <div class="warning">
-        <strong>Important:</strong> Installing a new operating system can result in data loss. Ensure you back up all crucial files before proceeding.
-    </div>
+        <div class="warning" role="note">
+            <strong>Important:</strong> Installing a new operating system can result in data loss. Ensure you back up all crucial files before proceeding.
+        </div>
 
-    <div class="step">
-        <h2>Step 1: Download Fedora Media Writer</h2>
-        <p>Go to the official Fedora website and download the <strong>Fedora Media Writer</strong> tool for your current operating system (Windows, macOS, or Linux). This utility safely downloads the latest Fedora Workstation ISO and writes it directly to a USB drive.</p>
-    </div>
+        <ol class="steps">
+            <li class="step">
+                <h2>Step 1: Download Fedora Media Writer</h2>
+                <p>Go to the official Fedora website and download the <strong>Fedora Media Writer</strong> tool for your current operating system (Windows, macOS, or Linux). This utility safely downloads the latest Fedora Workstation ISO and writes it directly to a USB drive.</p>
+            </li>
 
-    <div class="step">
-        <h2>Step 2: Create the Bootable USB</h2>
-        <p>Insert a blank USB flash drive (minimum 8GB capacity) into your PC. Open Fedora Media Writer, select <strong>Fedora Workstation</strong>, and choose your target USB drive. Click <strong>Write to Disk</strong> and wait for the verification process to complete.</p>
-    </div>
+            <li class="step">
+                <h2>Step 2: Create the Bootable USB</h2>
+                <p>Insert a blank USB flash drive (minimum 8GB capacity) into your PC. Open Fedora Media Writer, select <strong>Fedora Workstation</strong>, and choose your target USB drive. Click <strong>Write to Disk</strong> and wait for the verification process to complete.</p>
+            </li>
 
-    <div class="step">
-        <h2>Step 3: Boot from the USB Drive</h2>
-        <p>Shut down your computer completely. Turn it back on while repeatedly pressing your motherboard's boot menu key (common keys include <code>F12</code>, <code>F11</code>, <code>F8</code>, or <code>Esc</code>). Select your USB drive from the hardware list to launch the Fedora live environment.</p>
-    </div>
+            <li class="step">
+                <h2>Step 3: Boot from the USB Drive</h2>
+                <p>Shut down your computer completely. Turn it back on while repeatedly pressing your motherboard's boot menu key (common keys include <code>F12</code>, <code>F11</code>, <code>F8</code>, or <code>Esc</code>). Select your USB drive from the hardware list to launch the Fedora live environment.</p>
+            </li>
 
-    <div class="step">
-        <h2>Step 4: Run the Installer</h2>
-        <p>Once the desktop loads, click the <strong>Install to Hard Drive</strong> icon. Select your language and keyboard layout configurations on the introductory screen.</p>
-    </div>
+            <li class="step">
+                <h2>Step 4: Run the Installer</h2>
+                <p>Once the desktop loads, click the <strong>Install to Hard Drive</strong> icon. Select your language and keyboard layout configurations on the introductory screen.</p>
+            </li>
 
-    <div class="step">
-        <h2>Step 5: Partition and Install</h2>
-        <p>Click on <strong>Installation Destination</strong>. Select your main storage drive. You can choose automatic partitioning to let the system automatically manage system space, or manually configure your mount points. Click <strong>Begin Installation</strong> to apply configurations and extract the filesystem target.</p>
-    </div>
-
+            <li class="step">
+                <h2>Step 5: Partition and Install</h2>
+                <p>Click on <strong>Installation Destination</strong>. Select your main storage drive. You can choose automatic partitioning to let the system automatically manage system space, or manually configure your mount points. Click <strong>Begin Installation</strong> to apply configurations and extract the filesystem target.</p>
+            </li>
+        </ol>
+    </main>
 </body>
 </html>
