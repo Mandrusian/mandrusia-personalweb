@@ -9,10 +9,11 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="page">
+  <div class="page" id="top">
+    <a class="skip-link visually-hidden" href="#main-content">Skip to main content</a>
     <header class="site-header">
       <a class="site-name" href="#top">Mandrusia</a>
-      <nav aria-label="Main navigation">
+      <nav aria-label="Primary">
         <a href="#about">About</a>
         <a href="#interests">Interests</a>
         <a href="#software">Software</a>
@@ -20,7 +21,7 @@
       </nav>
     </header>
 
-    <main id="top">
+    <main id="main-content" tabindex="-1">
       <section class="hero" aria-labelledby="greeting">
         <h1 id="greeting">Hello, I’m <span>Mandrusia.</span></h1>
         <p class="lead">I like making things, sharing videos, and keeping up with politics.</p>
@@ -68,10 +69,10 @@
         <div class="section-body">
           <p>I usually check my email every second day or so, but feel free to say hello.</p>
           <div class="social-links">
-            <a href="mailto:zhianchina@gmail.com"><span>Email</span><span>zhianchina@gmail.com</span><b aria-hidden="true">↗</b></a>
-            <a href="https://www.tiktok.com/@mandrusiatech" target="_blank" rel="noopener noreferrer"><span>TikTok</span><span>@mandrusiatech</span><b aria-hidden="true">↗</b></a>
-            <a href="https://discord.com/users/693631240225685555" target="_blank" rel="noopener noreferrer"><span>Discord</span><span>Message me</span><b aria-hidden="true">↗</b></a>
-            <a href="https://steamcommunity.com/id/mandrusia/" target="_blank" rel="noopener noreferrer"><span>Steam</span><span>Friend me or something</span><b aria-hidden="true">↗</b></a>
+            <a href="mailto:zhianchina@gmail.com"><span>Email</span><span>zhianchina@gmail.com</span><span class="external-arrow" aria-hidden="true">↗</span></a>
+            <a href="https://www.tiktok.com/@mandrusiatech" target="_blank" rel="noopener noreferrer"><span>TikTok</span><span>@mandrusiatech<span class="visually-hidden"> (opens in a new tab)</span></span><span class="external-arrow" aria-hidden="true">↗</span></a>
+            <a href="https://discord.com/users/693631240225685555" target="_blank" rel="noopener noreferrer"><span>Discord</span><span>Message me<span class="visually-hidden"> (opens in a new tab)</span></span><span class="external-arrow" aria-hidden="true">↗</span></a>
+            <a href="https://steamcommunity.com/id/mandrusia/" target="_blank" rel="noopener noreferrer"><span>Steam</span><span>Friend me or something<span class="visually-hidden"> (opens in a new tab)</span></span><span class="external-arrow" aria-hidden="true">↗</span></a>
           </div>
         </div>
       </section>
@@ -79,23 +80,51 @@
 
     <footer class="site-footer">
       <a class="site-name" href="#top">Mandrusia</a>
-      <a class="top-link" href="#top">Back to top ↑</a>
+      <a class="top-link" href="#top">Back to top <span aria-hidden="true">↑</span></a>
     </footer>
   </div>
   <script>
-    document.documentElement.classList.add("js");
-const revealTargets = document.querySelectorAll(".hero > *, .content-section > .section-heading, .section-body > *, .social-links a, .site-footer > *");
-revealTargets.forEach((target) => target.classList.add("reveal"));
-if ("IntersectionObserver" in window) {
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      entry.target.classList.toggle("is-visible", entry.isIntersecting);
-    });
-  }, { threshold: 0.12 });
-  revealTargets.forEach((target) => revealObserver.observe(target));
-} else {
-  revealTargets.forEach((target) => target.classList.add("is-visible"));
-}
+    (() => {
+      const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (!("IntersectionObserver" in window) || reducedMotionQuery.matches) {
+        return;
+      }
+
+      document.documentElement.classList.add("js");
+      const revealTargets = Array.from(
+        document.querySelectorAll(
+          ".hero > *, .content-section > .section-heading, .section-body > *, .social-links a, .site-footer > *"
+        )
+      );
+      revealTargets.forEach((target) => target.classList.add("reveal"));
+
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("is-visible", entry.isIntersecting);
+          });
+        },
+        { threshold: 0.05 }
+      );
+      revealTargets.forEach((target) => revealObserver.observe(target));
+
+      const revealHashTarget = () => {
+        if (!window.location.hash) return;
+        const target = document.getElementById(window.location.hash.slice(1));
+        if (!target) return;
+        target.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
+      };
+      revealHashTarget();
+      window.addEventListener("hashchange", revealHashTarget);
+
+      reducedMotionQuery.addEventListener?.("change", (event) => {
+        if (event.matches) {
+          revealObserver.disconnect();
+          document.documentElement.classList.remove("js");
+          revealTargets.forEach((target) => target.classList.remove("reveal", "is-visible"));
+        }
+      });
+    })();
   </script>
 </body>
 </html>
